@@ -28,14 +28,16 @@
     "@emotion/styled": "^11.13.0",
     "@mui/material": "^6.1.0",
     "electron-updater": "^6.1.7",
-    "lowdb": "^7.0.1",
+    "pg": "^8.13.0",
     "zustand": "^4.5.5"
   },
   "devDependencies": {
     "@electron-toolkit/eslint-config-prettier": "^2.0.0",
     "@electron-toolkit/eslint-config-ts": "^2.0.0",
     "@electron-toolkit/tsconfig": "^1.0.1",
+    "@types/better-sqlite3": "^7.6.11",
     "@types/node": "^20.14.8",
+    "@types/pg": "^8.11.10",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
     "@vitejs/plugin-react": "^4.3.1",

@@ -1,47 +1,55 @@
-import { Container, Typography, Button } from '@mui/material'
-import { useCountStore } from './store/counter'
+import { useEffect, useState } from 'react'
+import { useUserStore } from './store/counter'
+import { Button } from '@mui/material'
 
-function App(): JSX.Element {
+function App() {
   // const ipcHandle = (): void => window.electron.ipcRenderer.send('ping')
-  const { counts, loading, error } = useCountStore()
+  const { users, getUsers, loading, error, addUser } = useUserStore()
+  const [login, setLogin] = useState('')
+  const [fullName, setFullName] = useState('')
+  const [password, setPassword] = useState('')
+  const [role, setRole] = useState('')
 
-  // useEffect(() => {
-  //   // Загружаем данные из базы данных при монтировании компонента
-  //   fetchCounts()
-  // }, [fetchCounts])
+  useEffect(() => {
+    getUsers()
+  }, [])
 
-  // const handleAddCount = async () => {
-  //   const newValue = Math.floor(Math.random() * 100)
-  //   await addNewCount(newValue)
-  // }
-
-  if (loading) {
-    return <div>Loading...</div>
-  }
-
-  if (error) {
-    return <div>Error: {error}</div>
+  const handleAddUser = async () => {
+    await addUser({ login, fullName, password, role })
+    setLogin('')
+    setFullName('')
+    setPassword('')
+    setRole('')
   }
 
   return (
-    <Container>
-      <Typography variant="h4">Hello World!</Typography>
-      <Typography variant="h6">
-        Count:{' '}
-        {counts.map((count) => (
-          <li key={count.id}>{count.value}</li>
-        ))}
-      </Typography>
-      <Button
-        variant="contained"
-        color="primary"
-        onClick={() => {
-          return
-        }}
-      >
-        Increment
+    <div>
+      <h1>User Management</h1>
+      <input placeholder="Login" value={login} onChange={(e) => setLogin(e.target.value)} />
+      <input
+        placeholder="Full Name"
+        value={fullName}
+        onChange={(e) => setFullName(e.target.value)}
+      />
+      <input
+        placeholder="Password"
+        type="password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+      />
+      <input placeholder="Role" value={role} onChange={(e) => setRole(e.target.value)} />
+      <Button variant="contained" color="primary" onClick={handleAddUser}>
+        Add User
       </Button>
-    </Container>
+      <h2>Users</h2>
+      <ul>
+        {users.map((user, index) => (
+          <li key={index}>
+            {user.fullName} ({user.login}) - {user.role}
+          </li>
+        ))}
+      </ul>
+    </div>
   )
 }
 
