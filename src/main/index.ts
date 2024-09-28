@@ -1,9 +1,10 @@
-import { app, shell, BrowserWindow, ipcMain, session } from 'electron'
+import { electronApp, is, optimizer } from '@electron-toolkit/utils'
+import { app, BrowserWindow, shell } from 'electron'
 import { join } from 'node:path'
-import os from 'node:os'
-import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
-import { addUser, createUserTable, getUsers } from './database'
+import { setupUserHandlers } from './ipc-handlers/users'
+import { createUserTable } from './services/userService'
+import { setupDevtools } from './devtools'
 
 function createWindow(): void {
   const mainWindow = new BrowserWindow({
@@ -34,17 +35,11 @@ function createWindow(): void {
   }
 }
 
-const reactDevToolsPath = join(
-  os.homedir(),
-  '/Library/Application Support/Google/Chrome/Default/Extensions/fmkadmapgofadopljbjfkapdkoienihi/5.3.1_0'
-)
-
 app.commandLine.appendSwitch('lang', 'ru')
 console.log(app.getLocale())
 
-app.whenReady().then(async () => {
-  await session.defaultSession.loadExtension(reactDevToolsPath)
-})
+setupDevtools()
+
 app.whenReady().then(() => {
   electronApp.setAppUserModelId('com.electron')
 
@@ -53,16 +48,7 @@ app.whenReady().then(() => {
   })
 
   createUserTable()
-
-  ipcMain.on('ping', () => console.log('pong'))
-
-  ipcMain.handle('add-user', (_event, user) => {
-    return addUser(user.login, user.fullName, user.password, user.role)
-  })
-
-  ipcMain.handle('get-users', () => {
-    return getUsers()
-  })
+  setupUserHandlers()
 
   createWindow()
 
