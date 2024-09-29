@@ -9,9 +9,10 @@ import Stack from '@mui/material/Stack'
 import Step from '@mui/material/Step'
 import StepLabel from '@mui/material/StepLabel'
 import Stepper from '@mui/material/Stepper'
-import AddressForm from './AddressForm'
-import PaymentForm from './PaymentForm'
-import Review from './Review'
+import AddressForm from '../components/AddressForm'
+import PaymentForm from '../components/PaymentForm'
+import Review from '../components/Review'
+import { SelectContent } from '@renderer/components/SelectContent'
 
 const steps = ['Шаг 1', 'Шаг 2', 'Шаг 3']
 function getStepContent(step: number) {
@@ -27,7 +28,7 @@ function getStepContent(step: number) {
   }
 }
 
-export function MainGrid() {
+export function ReportScreen() {
   const [activeStep, setActiveStep] = React.useState(0)
 
   const handleNext = () => {

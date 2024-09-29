@@ -6,14 +6,14 @@ import { alpha } from '@mui/material/styles'
 import CssBaseline from '@mui/material/CssBaseline'
 import Box from '@mui/material/Box'
 import Stack from '@mui/material/Stack'
-import { MainGrid } from './components/MainGrid'
-import { SideMenu } from './components/SideMenu'
+import { SideMenu } from './components/SideMenu/SideMenu'
 import { AppTheme } from './theme/AppTheme'
 import {
   chartsCustomizations,
   dataGridCustomizations,
   datePickersCustomizations
 } from './theme/customizations'
+import { Outlet } from 'react-router-dom'
 
 const xThemeComponents = {
   ...chartsCustomizations,
@@ -21,7 +21,7 @@ const xThemeComponents = {
   ...datePickersCustomizations
 }
 
-export function App(props: { disableCustomTheme?: boolean }) {
+export function Layout(props: { disableCustomTheme?: boolean }) {
   return (
     <AppTheme {...props} themeComponents={xThemeComponents}>
       <CssBaseline enableColorScheme />
@@ -37,16 +37,8 @@ export function App(props: { disableCustomTheme?: boolean }) {
             overflow: 'auto'
           })}
         >
-          <Stack
-            spacing={2}
-            sx={{
-              alignItems: 'center',
-              mx: 3,
-              pb: 10,
-              mt: { xs: 8, md: 0 }
-            }}
-          >
-            <MainGrid />
+          <Stack sx={{ mx: 3, mt: 3 }}>
+            <Outlet />
           </Stack>
         </Box>
       </Box>

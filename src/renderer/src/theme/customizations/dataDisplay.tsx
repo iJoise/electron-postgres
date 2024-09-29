@@ -21,8 +21,8 @@ export const dataDisplayCustomizations: Components<Theme> = {
     styleOverrides: {
       root: ({ theme }) => ({
         [`& .${svgIconClasses.root}`]: {
-          width: '1rem',
-          height: '1rem',
+          width: '1.2rem',
+          height: '1.2rem',
           color: (theme.vars || theme).palette.text.secondary
         },
         [`& .${typographyClasses.root}`]: {
@@ -36,7 +36,7 @@ export const dataDisplayCustomizations: Components<Theme> = {
           opacity: 0.7,
           '&.Mui-selected': {
             opacity: 1,
-            backgroundColor: alpha(theme.palette.action.selected, 0.3),
+            backgroundColor: alpha(theme.palette.action.selected, 1),
             [`& .${svgIconClasses.root}`]: {
               color: (theme.vars || theme).palette.text.primary
             },
@@ -44,7 +44,7 @@ export const dataDisplayCustomizations: Components<Theme> = {
               backgroundColor: alpha(theme.palette.action.selected, 0.3)
             },
             '&:hover': {
-              backgroundColor: alpha(theme.palette.action.selected, 0.5)
+              backgroundColor: alpha(theme.palette.action.selected, 0.7)
             }
           },
           '&:focus-visible': {
@@ -57,12 +57,12 @@ export const dataDisplayCustomizations: Components<Theme> = {
   MuiListItemText: {
     styleOverrides: {
       primary: ({ theme }) => ({
-        fontSize: theme.typography.body2.fontSize,
-        fontWeight: 500,
-        lineHeight: theme.typography.body2.lineHeight
+        fontSize: theme.typography.body1.fontSize,
+        fontWeight: 600,
+        lineHeight: theme.typography.body1.lineHeight
       }),
       secondary: ({ theme }) => ({
-        fontSize: theme.typography.caption.fontSize,
+        fontSize: theme.typography.body1.fontSize,
         lineHeight: theme.typography.caption.lineHeight
       })
     }

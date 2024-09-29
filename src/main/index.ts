@@ -1,3 +1,4 @@
+import { registerRoute } from '../lib/electron-router-dom'
 import { electronApp, is, optimizer } from '@electron-toolkit/utils'
 import { app, BrowserWindow, shell } from 'electron'
 import { join } from 'node:path'
@@ -33,12 +34,19 @@ function createWindow(): void {
   } else {
     mainWindow.loadFile(join(__dirname, '../renderer/index.html'))
   }
+
+  registerRoute({
+    id: 'main',
+    browserWindow: mainWindow,
+    htmlFile: join(__dirname, '../renderer/index.html')
+  })
 }
 
 app.commandLine.appendSwitch('lang', 'ru')
-console.log(app.getLocale())
 
-setupDevtools()
+if (is.dev) {
+  setupDevtools()
+}
 
 app.whenReady().then(() => {
   electronApp.setAppUserModelId('com.electron')

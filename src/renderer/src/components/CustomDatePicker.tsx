@@ -37,7 +37,7 @@ function ButtonField(props: ButtonFieldProps) {
       disabled={disabled}
       ref={ref}
       aria-label={ariaLabel}
-      size="small"
+      size="medium"
       onClick={() => setOpen?.((prev) => !prev)}
       startIcon={<CalendarTodayRoundedIcon fontSize="small" />}
       sx={{ minWidth: 'fit-content' }}

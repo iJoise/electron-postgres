@@ -7,55 +7,35 @@ import TextField from '@mui/material/TextField'
 import Dialog from '@mui/material/Dialog'
 import DialogActions from '@mui/material/DialogActions'
 import DialogContent from '@mui/material/DialogContent'
+import { useUserStore } from '@renderer/store/users'
+import { Typography } from '@mui/material'
+import { enqueueSnackbar } from 'notistack'
+
 interface SignInProps {
   open: boolean
   handleClose: () => void
 }
+interface FormFields {
+  login: HTMLInputElement
+  password: HTMLInputElement
+}
 
 export function SignIn({ open, handleClose }: SignInProps) {
-  const [emailError, setEmailError] = React.useState(false)
-  const [emailErrorMessage, setEmailErrorMessage] = React.useState('')
-  const [passwordError, setPasswordError] = React.useState(false)
-  const [passwordErrorMessage, setPasswordErrorMessage] = React.useState('')
+  const { authorizedErrorMessage, loginUser } = useUserStore()
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement & FormFields>) => {
     event.preventDefault()
+    const form = event.currentTarget
+    const { login, password } = form
 
-    if (emailError || passwordError) {
-      return
+    const user = await loginUser(login.value, password.value)
+
+    if (user) {
+      handleClose()
+      enqueueSnackbar(`Пользователь ${user.fullname} успешно авторизован`, {
+        variant: 'success'
+      })
     }
-    const data = new FormData(event.currentTarget)
-    console.log({
-      login: data.get('login'),
-      password: data.get('password')
-    })
-  }
-
-  const validateInputs = () => {
-    const login = document.getElementById('login') as HTMLInputElement
-    const password = document.getElementById('password') as HTMLInputElement
-
-    let isValid = true
-
-    if (!login.value) {
-      setEmailError(true)
-      setEmailErrorMessage('Введите валидный логин')
-      isValid = false
-    } else {
-      setEmailError(false)
-      setEmailErrorMessage('')
-    }
-
-    if (!password.value || password.value.length < 6) {
-      setPasswordError(true)
-      setPasswordErrorMessage('Введите валидный пароль')
-      isValid = false
-    } else {
-      setPasswordError(false)
-      setPasswordErrorMessage('')
-    }
-
-    return isValid
   }
 
   return (
@@ -80,8 +60,7 @@ export function SignIn({ open, handleClose }: SignInProps) {
           <FormControl>
             <FormLabel htmlFor="login">Логин</FormLabel>
             <TextField
-              error={emailError}
-              helperText={emailErrorMessage}
+              error={!!authorizedErrorMessage}
               id="login"
               type="login"
               name="login"
@@ -90,33 +69,37 @@ export function SignIn({ open, handleClose }: SignInProps) {
               autoFocus
               fullWidth
               variant="outlined"
-              color={emailError ? 'error' : 'primary'}
+              color={authorizedErrorMessage ? 'error' : 'primary'}
               sx={{ ariaLabel: 'login' }}
             />
           </FormControl>
           <FormControl>
             <FormLabel htmlFor="password">Пароль</FormLabel>
             <TextField
-              error={passwordError}
-              helperText={passwordErrorMessage}
+              error={!!authorizedErrorMessage}
               name="password"
               placeholder="••••••"
-              type=""
+              type="password"
               id="password"
               autoComplete="current-password"
               autoFocus
               fullWidth
               variant="outlined"
-              color={passwordError ? 'error' : 'primary'}
+              color={authorizedErrorMessage ? 'error' : 'primary'}
             />
           </FormControl>
         </Box>
+        {authorizedErrorMessage ? (
+          <Typography variant="h5" color="red">
+            {authorizedErrorMessage}
+          </Typography>
+        ) : null}
       </DialogContent>
       <DialogActions sx={{ pb: 3, px: 3, gap: 8 }}>
         <Button fullWidth onClick={handleClose}>
           Закрыть
         </Button>
-        <Button type="submit" fullWidth variant="contained" onClick={validateInputs}>
+        <Button type="submit" fullWidth variant="contained">
           Войти
         </Button>
       </DialogActions>

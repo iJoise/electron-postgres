@@ -6,9 +6,11 @@ import Stack from '@mui/material/Stack'
 import Button from '@mui/material/Button'
 import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded'
 import LoginRoundedIcon from '@mui/icons-material/LoginRounded'
-import { ColorModeIconDropdown } from '../theme/ColorModeIconDropdown'
+import { ColorModeButton } from '../../theme/ColorModeButton'
 import React from 'react'
 import { SignIn } from './SignIn'
+import { useUserStore } from '@renderer/store/users'
+import { enqueueSnackbar } from 'notistack'
 
 const drawerWidth = 240
 
@@ -25,6 +27,24 @@ const Drawer = styled(MuiDrawer)({
 
 export function SideMenu() {
   const [open, setOpen] = React.useState(false)
+  const { authorizedUser, clearAuth } = useUserStore(({ authorizedUser, clearAuth }) => ({
+    authorizedUser,
+    clearAuth
+  }))
+  const authIcon = authorizedUser ? <LogoutRoundedIcon /> : <LoginRoundedIcon />
+
+  const handleAuthClick = () => {
+    if (authorizedUser) {
+      const userName = authorizedUser.fullname
+
+      clearAuth()
+      enqueueSnackbar(`Сеанс пользователя ${userName} закончен`, {
+        variant: 'info'
+      })
+    } else {
+      setOpen(true)
+    }
+  }
 
   return (
     <Drawer
@@ -35,24 +55,14 @@ export function SideMenu() {
         }
       }}
     >
-      <ColorModeIconDropdown />
+      <ColorModeButton />
       <Divider />
       <MenuContent />
       <Divider />
 
       <Stack sx={{ p: 2 }}>
-        <Button variant="outlined" fullWidth startIcon={<LogoutRoundedIcon />}>
-          Выйти
-        </Button>
-      </Stack>
-      <Stack sx={{ p: 2 }}>
-        <Button
-          onClick={() => setOpen(true)}
-          variant="outlined"
-          fullWidth
-          startIcon={<LoginRoundedIcon />}
-        >
-          Войти
+        <Button onClick={handleAuthClick} variant="outlined" fullWidth startIcon={authIcon}>
+          {authorizedUser ? 'Выйти' : 'Авторизоваться'}
         </Button>
       </Stack>
       <SignIn open={open} handleClose={() => setOpen(false)} />

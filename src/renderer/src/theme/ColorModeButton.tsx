@@ -5,7 +5,7 @@ import { useColorScheme } from '@mui/material/styles'
 import Stack from '@mui/material/Stack'
 import Button from '@mui/material/Button'
 
-export function ColorModeIconDropdown() {
+export function ColorModeButton() {
   const { mode, systemMode, setMode } = useColorScheme()
 
   const handleMode = () => {
