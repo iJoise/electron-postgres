@@ -4,11 +4,21 @@ import { User } from '@renderer/types/users'
 import { create } from 'zustand'
 import { UserState } from './types'
 
+const user = import.meta.env.DEV
+  ? {
+      id: 6,
+      login: '123',
+      fullname: 'Default Admin',
+      password: '',
+      role: 'super-admin'
+    }
+  : null
+
 export const useUserStore = create<UserState>((set) => ({
   users: [],
   loading: false,
   error: null,
-  authorizedUser: null,
+  authorizedUser: user,
   authorizedLoading: false,
   authorizedErrorMessage: null,
 

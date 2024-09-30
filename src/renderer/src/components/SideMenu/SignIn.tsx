@@ -27,7 +27,6 @@ export function SignIn({ open, handleClose }: SignInProps) {
     event.preventDefault()
     const form = event.currentTarget
     const { login, password } = form
-
     const user = await loginUser(login.value, password.value)
 
     if (user) {
