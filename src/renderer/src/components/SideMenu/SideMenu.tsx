@@ -35,7 +35,7 @@ export function SideMenu() {
 
   const handleAuthClick = () => {
     if (authorizedUser) {
-      const userName = authorizedUser.fullname
+      const userName = authorizedUser.full_name
 
       clearAuth()
       enqueueSnackbar(`Сеанс пользователя ${userName} закончен`, {

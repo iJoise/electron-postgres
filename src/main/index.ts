@@ -6,6 +6,7 @@ import icon from '../../resources/icon.png?asset'
 import { setupUserHandlers } from './ipc-handlers/users'
 import { createUserTable } from './services/userService'
 import { setupDevtools } from './devtools'
+import { setupWorkerHandlers } from './ipc-handlers/workers'
 
 function createWindow(): void {
   const mainWindow = new BrowserWindow({
@@ -57,6 +58,8 @@ app.whenReady().then(() => {
 
   createUserTable()
   setupUserHandlers()
+
+  setupWorkerHandlers()
 
   createWindow()
 

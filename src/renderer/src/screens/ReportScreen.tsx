@@ -12,7 +12,6 @@ import Stepper from '@mui/material/Stepper'
 import AddressForm from '../components/AddressForm'
 import PaymentForm from '../components/PaymentForm'
 import Review from '../components/Review'
-import { SelectContent } from '@renderer/components/SelectContent'
 
 const steps = ['Шаг 1', 'Шаг 2', 'Шаг 3']
 function getStepContent(step: number) {

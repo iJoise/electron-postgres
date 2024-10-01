@@ -31,7 +31,7 @@ export function SignIn({ open, handleClose }: SignInProps) {
 
     if (user) {
       handleClose()
-      enqueueSnackbar(`Пользователь ${user.fullname} успешно авторизован`, {
+      enqueueSnackbar(`Пользователь ${user.full_name} успешно авторизован`, {
         variant: 'success'
       })
     }

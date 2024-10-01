@@ -4,17 +4,11 @@ import ListItemButton from '@mui/material/ListItemButton'
 import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemText from '@mui/material/ListItemText'
 import Stack from '@mui/material/Stack'
-import AnalyticsRoundedIcon from '@mui/icons-material/AnalyticsRounded'
-import PeopleAltRoundedIcon from '@mui/icons-material/PeopleAltRounded'
 import { NavLink } from 'react-router-dom'
 import { alpha } from '@mui/material/styles'
 import { useUserStore } from '@renderer/store/users'
 import { useMemo } from 'react'
-
-const mainListItems = [
-  { text: 'Отчёт', icon: <AnalyticsRoundedIcon />, path: '/', isAuth: false },
-  { text: 'Пользователи', icon: <PeopleAltRoundedIcon />, path: 'users', isAuth: true }
-]
+import { mainListItems } from '@renderer/constants/router'
 
 export default function MenuContent() {
   const isAuth = useUserStore(({ authorizedUser }) => !!authorizedUser)

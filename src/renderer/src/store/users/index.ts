@@ -5,13 +5,13 @@ import { create } from 'zustand'
 import { UserState } from './types'
 
 const user = import.meta.env.DEV
-  ? {
+  ? ({
       id: 6,
       login: '123',
-      fullname: 'Default Admin',
+      full_name: 'Super Admin',
       password: '',
       role: 'super-admin'
-    }
+    } as User)
   : null
 
 export const useUserStore = create<UserState>((set) => ({
@@ -32,15 +32,21 @@ export const useUserStore = create<UserState>((set) => ({
     }
   },
 
-  addUser: async (user: User) => {
+  addUser: async (user: Omit<User, 'id'>) => {
     try {
       const response = await UserService.addUser(user)
 
       if (response.success) {
-        set((state) => ({ users: [...state.users, user] }))
+        set((state) => ({ users: [...state.users, response.data] }))
+
+        return response.data
       }
+
+      return null
     } catch (error) {
       set({ error: 'Failed to add user', loading: false })
+
+      return null
     }
   },
 
@@ -62,6 +68,24 @@ export const useUserStore = create<UserState>((set) => ({
     } catch (error) {
       set({ authorizedErrorMessage: ErrorsMessages.UNEXPECTED, authorizedLoading: false })
       return null
+    }
+  },
+
+  deleteUser: async (id: number) => {
+    set({ loading: true, error: null })
+    try {
+      const response = await UserService.deleteUser(id)
+
+      if (response.success) {
+        set((state) => ({
+          users: state.users.filter((user) => user.id !== response.data.id),
+          loading: false
+        }))
+      }
+
+      set({ loading: false })
+    } catch (error) {
+      set({ error: 'Failed to delete user', loading: false })
     }
   },
 

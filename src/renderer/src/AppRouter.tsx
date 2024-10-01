@@ -3,6 +3,7 @@ import { Router } from '../../lib/electron-router-dom'
 import { Layout } from '@renderer/Layout'
 import { ReportScreen } from '@renderer/screens/ReportScreen'
 import { UsersScreen } from '@renderer/screens/UsersScreen'
+import { WorkersScreen } from './screens/WorkersScreen'
 
 export const AppRouter = () => {
   return (
@@ -11,6 +12,7 @@ export const AppRouter = () => {
         <Route path="/" element={<Layout />}>
           <Route path="/" element={<ReportScreen />} />
           <Route path="/users" element={<UsersScreen />} />
+          <Route path="/workers" element={<WorkersScreen />} />
         </Route>
       }
     />
