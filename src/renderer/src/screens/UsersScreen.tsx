@@ -4,9 +4,7 @@ import Typography from '@mui/material/Typography'
 import { useUserStore } from '@renderer/store/users'
 import { useEffect, useMemo, useState } from 'react'
 import { GridColDef } from '@mui/x-data-grid'
-import { UsersDataGrid } from '@renderer/components/UsersDataGrid'
-import { ActionButton } from '@renderer/components/UsersDataGrid/ActionButton'
-import { AddUserDialog } from '@renderer/components/UsersDataGrid/AddUserDialog'
+import { UsersDataGrid, ActionButton, AddUserDialog } from '@renderer/components/users'
 
 export function UsersScreen() {
   const { getUsers, users, loading, authorizedUser, deleteUser } = useUserStore()

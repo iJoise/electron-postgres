@@ -178,8 +178,8 @@ export const colorSchemes = {
       },
       divider: alpha(gray[700], 0.6),
       background: {
-        // default: gray[900],
-        default: 'rgba(18, 18, 18)',
+        // default: 'rgba(18, 18, 18)',
+        default: gray[900],
         paper: 'hsl(220, 30%, 7%)'
       },
       text: {

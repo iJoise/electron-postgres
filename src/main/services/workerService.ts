@@ -2,7 +2,7 @@ import * as XLSX from 'xlsx'
 import { client } from '../database'
 
 const recreateDepartmentsTable = async () => {
-  const dropQuery = `DROP TABLE IF EXISTS departments;`
+  const dropQuery = `DROP TABLE IF EXISTS departments CASCADE;`
   const createQuery = `
     CREATE TABLE departments (
       id SERIAL PRIMARY KEY,
@@ -21,7 +21,7 @@ const recreateDepartmentsTable = async () => {
 }
 
 const recreateWorkersTable = async () => {
-  const dropQuery = `DROP TABLE IF EXISTS workers;`
+  const dropQuery = `DROP TABLE IF EXISTS workers CASCADE;`
   const createQuery = `
     CREATE TABLE workers (
       id SERIAL PRIMARY KEY,
@@ -68,11 +68,26 @@ export const insertWorkers = async (workers) => {
   try {
     for (const worker of workers) {
       const departmentId = await getOrCreateDepartment(worker.department)
-      await client.query(query, [worker.fullName, worker.position, departmentId])
+      await client.query(query, [worker.full_name, worker.position, departmentId])
     }
     console.log('Данные успешно вставлены в таблицу workers')
   } catch (error) {
-    console.error('Ошибка при вставке данных работников:', error)
+    console.error('Ошибка при вставке данных сотрудников:', error)
+    throw error
+  }
+}
+
+const recreateDepartmentsAndWorkersTables = async () => {
+  try {
+    await client.query('DELETE FROM workers')
+
+    await recreateDepartmentsTable()
+
+    await recreateWorkersTable()
+
+    console.log('Таблицы departments и workers успешно пересозданы')
+  } catch (error) {
+    console.error('Ошибка при пересоздании таблиц:', error)
     throw error
   }
 }
@@ -100,12 +115,48 @@ export const processWorkersFile = async (filePath: string) => {
       }
     })
 
-    await recreateDepartmentsTable()
-    await recreateWorkersTable()
+    if (workers.length) {
+      await recreateDepartmentsAndWorkersTables()
 
-    await insertWorkers(workers)
+      await insertWorkers(workers)
+    }
   } catch (error) {
     console.error('Ошибка при обработке файла:', error)
     throw error
+  }
+}
+
+export const getAllWorkers = async () => {
+  const query = `
+    SELECT 
+      workers.id, 
+      workers.full_name, 
+      workers.position, 
+      departments.name AS department 
+    FROM workers
+    LEFT JOIN departments ON workers.department_id = departments.id;
+  `
+
+  try {
+    const res = await client.query(query)
+    return { success: true, data: res.rows }
+  } catch (error) {
+    console.error('Ошибка при получении сотрудников:', error)
+    return { success: false, error }
+  }
+}
+
+export const getAllDepartments = async () => {
+  const query = `
+    SELECT id, name 
+    FROM departments;
+  `
+
+  try {
+    const res = await client.query(query)
+    return { success: true, data: res.rows }
+  } catch (error) {
+    console.error('Ошибка при получении департаментов:', error)
+    return { success: false, error }
   }
 }

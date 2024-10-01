@@ -8,6 +8,8 @@ import { navigationCustomizations } from './customizations/navigation'
 import { surfacesCustomizations } from './customizations/surfaces'
 import { colorSchemes, typography, shadows, shape } from './themePrimitives'
 import { ruRU } from '@mui/x-date-pickers/locales'
+import { ruRU as dataGridRu } from '@mui/x-data-grid/locales'
+import { ruRU as coreRu } from '@mui/material/locale'
 
 interface AppThemeProps {
   children: React.ReactNode
@@ -42,7 +44,9 @@ export function AppTheme({ children, disableCustomTheme, themeComponents }: AppT
               ...themeComponents
             }
           },
-          ruRU
+          ruRU,
+          dataGridRu,
+          coreRu
         )
   }, [disableCustomTheme, themeComponents])
 
