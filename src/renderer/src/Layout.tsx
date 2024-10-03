@@ -6,7 +6,6 @@ import { alpha } from '@mui/material/styles'
 import CssBaseline from '@mui/material/CssBaseline'
 import Box from '@mui/material/Box'
 import Stack from '@mui/material/Stack'
-import { SideMenu } from './components/sideMenu'
 import { AppTheme } from './theme/AppTheme'
 import {
   chartsCustomizations,
@@ -14,6 +13,7 @@ import {
   datePickersCustomizations
 } from './theme/customizations'
 import { Outlet } from 'react-router-dom'
+import { SideMenu } from './components/sideMenu/SideMenu'
 
 const xThemeComponents = {
   ...chartsCustomizations,
