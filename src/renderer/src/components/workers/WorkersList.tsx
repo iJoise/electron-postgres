@@ -1,4 +1,3 @@
-import Typography from '@mui/material/Typography'
 import { DataGrid } from '@mui/x-data-grid/DataGrid'
 import { WorkersService } from '@renderer/services/workersService'
 import { WorkersType } from '@renderer/types/workers'
