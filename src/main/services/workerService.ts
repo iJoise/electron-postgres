@@ -2,7 +2,7 @@ import * as XLSX from 'xlsx'
 import { client } from '../database'
 
 const recreateDepartmentsTable = async () => {
-  const dropQuery = `DROP TABLE IF EXISTS departments CASCADE;`
+  const dropQuery = `DROP TABLE IF EXISTS departments;`
   const createQuery = `
     CREATE TABLE departments (
       id SERIAL PRIMARY KEY,
@@ -21,13 +21,13 @@ const recreateDepartmentsTable = async () => {
 }
 
 const recreateWorkersTable = async () => {
-  const dropQuery = `DROP TABLE IF EXISTS workers CASCADE;`
+  const dropQuery = `DROP TABLE IF EXISTS workers;`
   const createQuery = `
     CREATE TABLE workers (
       id SERIAL PRIMARY KEY,
       full_name TEXT,
       position TEXT,
-      department_id INTEGER REFERENCES departments(id) ON DELETE SET NULL
+      department TEXT
     );
   `
 
@@ -41,18 +41,17 @@ const recreateWorkersTable = async () => {
   }
 }
 
-const getOrCreateDepartment = async (departmentName: string) => {
-  const querySelect = `SELECT id FROM departments WHERE name = $1`
-  const queryInsert = `INSERT INTO departments (name) VALUES ($1) RETURNING id`
+const getOrCreateDepartment = async (departments: string[]) => {
+  const queryInsert = `
+    INSERT INTO departments (name)
+    VALUES ($1)
+  `
 
   try {
-    const res = await client.query(querySelect, [departmentName])
-    if (res.rows.length > 0) {
-      return res.rows[0].id
-    } else {
-      const insertRes = await client.query(queryInsert, [departmentName])
-      return insertRes.rows[0].id
+    for (const department of departments) {
+      await client.query(queryInsert, [department])
     }
+    console.log('Данные успешно вставлены в таблицу workers')
   } catch (error) {
     console.error('Ошибка при работе с таблицей departments:', error)
     throw error
@@ -61,14 +60,13 @@ const getOrCreateDepartment = async (departmentName: string) => {
 
 export const insertWorkers = async (workers) => {
   const query = `
-    INSERT INTO workers (full_name, position, department_id)
+    INSERT INTO workers (full_name, position, department)
     VALUES ($1, $2, $3);
   `
 
   try {
     for (const worker of workers) {
-      const departmentId = await getOrCreateDepartment(worker.department)
-      await client.query(query, [worker.full_name, worker.position, departmentId])
+      await client.query(query, [worker.full_name, worker.position, worker.department])
     }
     console.log('Данные успешно вставлены в таблицу workers')
   } catch (error) {
@@ -79,8 +77,6 @@ export const insertWorkers = async (workers) => {
 
 const recreateDepartmentsAndWorkersTables = async () => {
   try {
-    await client.query('DELETE FROM workers')
-
     await recreateDepartmentsTable()
 
     await recreateWorkersTable()
@@ -100,10 +96,15 @@ export const processWorkersFile = async (filePath: string) => {
 
     let currentDepartment = ''
     const workers: any[] = []
+    const departments: string[] = []
 
     rawData.forEach((row: any) => {
       if (row[0] && typeof row[0] === 'string' && row[0].includes('Участок')) {
         currentDepartment = row[0].trim()
+
+        if (!departments.includes(currentDepartment)) {
+          departments.push(currentDepartment)
+        }
       } else if (row[0] && typeof row[0] === 'number' && row[3] && row[6]) {
         const worker = {
           full_name: row[3].trim(),
@@ -119,6 +120,7 @@ export const processWorkersFile = async (filePath: string) => {
       await recreateDepartmentsAndWorkersTables()
 
       await insertWorkers(workers)
+      await getOrCreateDepartment(departments)
     }
   } catch (error) {
     console.error('Ошибка при обработке файла:', error)
@@ -128,14 +130,8 @@ export const processWorkersFile = async (filePath: string) => {
 
 export const getAllWorkers = async () => {
   const query = `
-    SELECT 
-      workers.id, 
-      workers.full_name, 
-      workers.position, 
-      departments.name AS department 
-    FROM workers
-    LEFT JOIN departments ON workers.department_id = departments.id;
-  `
+    SELECT * FROM workers
+    `
 
   try {
     const res = await client.query(query)
