@@ -13,7 +13,7 @@ import {
   datePickersCustomizations
 } from './theme/customizations'
 import { Outlet } from 'react-router-dom'
-import { SideMenu } from './components/sideMenu/SideMenu'
+import { SideMenu } from './components/side-menu/SideMenu'
 
 const xThemeComponents = {
   ...chartsCustomizations,
