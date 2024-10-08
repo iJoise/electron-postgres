@@ -15,7 +15,6 @@ export const dataGridCustomizations: DataGridProComponents<Theme> & DataGridComp
   MuiDataGrid: {
     styleOverrides: {
       root: ({ theme }) => {
-        console.log(theme)
         return {
           '--DataGrid-overlayHeight': '300px',
           overflow: 'clip',
@@ -121,6 +120,9 @@ export const dataGridCustomizations: DataGridProComponents<Theme> & DataGridComp
         gap: theme.spacing(1),
         alignItems: 'flex-end'
       }),
+      columnSeparator: {
+        color: gray[400]
+      },
       columnsManagementHeader: ({ theme }) => ({
         paddingRight: theme.spacing(3),
         paddingLeft: theme.spacing(3)

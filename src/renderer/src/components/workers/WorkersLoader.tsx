@@ -1,5 +1,4 @@
 import Button from '@mui/material/Button'
-import Typography from '@mui/material/Typography'
 import { ChangeEvent, useState } from 'react'
 import CloudUploadRoundedIcon from '@mui/icons-material/CloudUploadRounded'
 import { WorkersService } from '@renderer/services/workersService'
@@ -36,9 +35,9 @@ export const WorkersLoader = () => {
 
   return (
     <>
-      <Typography component="h2" variant="h3" marginBottom={2}>
-        Загрузчик
-      </Typography>
+      <Box sx={{ mb: 3 }}>
+        <WorkersAccordion />
+      </Box>
       <Button
         component="label"
         variant="outlined"
@@ -52,9 +51,6 @@ export const WorkersLoader = () => {
         <input type="file" accept=".xlsx, .xls" hidden onChange={handleFileUpload} />
       </Button>
       {filename}
-      <Box sx={{ mt: 3 }}>
-        <WorkersAccordion />
-      </Box>
     </>
   )
 }

@@ -7,6 +7,7 @@ import { setupUserHandlers } from './ipc-handlers/users'
 import { createUserTable } from './services/userService'
 import { setupDevtools } from './devtools'
 import { setupWorkerHandlers } from './ipc-handlers/workers'
+import { setupSettingsHandlers } from './ipc-handlers/settings'
 
 function createWindow(): void {
   const mainWindow = new BrowserWindow({
@@ -58,8 +59,8 @@ app.whenReady().then(() => {
 
   createUserTable()
   setupUserHandlers()
-
   setupWorkerHandlers()
+  setupSettingsHandlers()
 
   createWindow()
 

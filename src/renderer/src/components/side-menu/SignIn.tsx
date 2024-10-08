@@ -81,7 +81,6 @@ export function SignIn({ open, handleClose }: SignInProps) {
               type="password"
               id="password"
               autoComplete="current-password"
-              autoFocus
               fullWidth
               variant="outlined"
               color={authorizedErrorMessage ? 'error' : 'primary'}

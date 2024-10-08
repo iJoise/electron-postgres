@@ -104,7 +104,6 @@ export function AddUserDialog({ open, handleClose }: AddUserDialogProps) {
               id="full_name"
               name="full_name"
               placeholder="Полное имя"
-              autoFocus
               fullWidth
               variant="outlined"
               sx={{ ariaLabel: 'login' }}
@@ -118,7 +117,6 @@ export function AddUserDialog({ open, handleClose }: AddUserDialogProps) {
               placeholder="••••••"
               type="password"
               id="password"
-              autoFocus
               fullWidth
               variant="outlined"
             />
@@ -131,7 +129,6 @@ export function AddUserDialog({ open, handleClose }: AddUserDialogProps) {
               placeholder="••••••"
               type="password"
               id="check_password"
-              autoFocus
               fullWidth
               variant="outlined"
             />

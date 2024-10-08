@@ -1,6 +1,7 @@
 import { DataGrid } from '@mui/x-data-grid/DataGrid'
 import { WorkersService } from '@renderer/services/workersService'
 import { WorkersType } from '@renderer/types/workers'
+import { enqueueSnackbar } from 'notistack'
 import { useEffect, useState } from 'react'
 
 const columns = [
@@ -21,13 +22,18 @@ export const WorkersList = () => {
   useEffect(() => {
     setLoading(true)
 
-    fetchWorkers().then((res) => {
-      if (res.success) {
-        setRows(res.data)
-
-        setLoading(false)
-      }
-    })
+    fetchWorkers()
+      .then((res) => {
+        if (res.success) {
+          setRows(res.data)
+        }
+      })
+      .catch((err) =>
+        enqueueSnackbar(JSON.stringify(err), {
+          variant: 'error'
+        })
+      )
+      .finally(() => setLoading(false))
   }, [])
 
   return (
