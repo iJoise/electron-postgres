@@ -4,8 +4,8 @@
   "version": "1.0.0",
   "description": "",
   "main": "./out/main/index.js",
-  "author": "example.com",
-  "homepage": "https://electron-vite.org",
+  "author": "https://github.com/iJoise",
+  "homepage": "https://github.com/iJoise",
   "scripts": {
     "clear:users": "node ./scripts/clearUserDatabase.js",
     "clear:workers": "node ./scripts/clearWorkers.js",
@@ -52,7 +52,6 @@
     "@electron-toolkit/eslint-config-ts": "^2.0.0",
     "@electron-toolkit/tsconfig": "^1.0.1",
     "@types/bcrypt": "^5.0.2",
-    "@types/better-sqlite3": "^7.6.11",
     "@types/node": "^20.14.8",
     "@types/pg": "^8.11.10",
     "@types/react": "^18.3.3",

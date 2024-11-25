@@ -9,15 +9,15 @@ import Stack from '@mui/material/Stack'
 import Step from '@mui/material/Step'
 import StepLabel from '@mui/material/StepLabel'
 import Stepper from '@mui/material/Stepper'
-import AddressForm from '../components/AddressForm'
-import PaymentForm from '../components/PaymentForm'
-import Review from '../components/Review'
+import PaymentForm from '../components/report/PaymentForm'
+import Review from '../components/report/Review'
+import { Department } from '@renderer/components/report'
 
 const steps = ['Шаг 1', 'Шаг 2', 'Шаг 3']
 function getStepContent(step: number) {
   switch (step) {
     case 0:
-      return <AddressForm />
+      return <Department />
     case 1:
       return <PaymentForm />
     case 2:

@@ -26,6 +26,13 @@ export const WorkersList = () => {
       .then((res) => {
         if (res.success) {
           setRows(res.data)
+        } else {
+          enqueueSnackbar(
+            JSON.stringify(typeof res.error === 'string' ? res.error : res.error?.message),
+            {
+              variant: 'error'
+            }
+          )
         }
       })
       .catch((err) =>

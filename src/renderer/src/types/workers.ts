@@ -8,4 +8,5 @@ export type WorkersType = {
 export type DepartmentsType = {
   id: number
   name: string
+  is_active: boolean
 }

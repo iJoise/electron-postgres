@@ -32,9 +32,12 @@ export function SettingsScreen() {
 
         await SettingsService.getAllSetting(values.tableType)
       } else {
-        enqueueSnackbar(JSON.stringify(res.error), {
-          variant: 'error'
-        })
+        enqueueSnackbar(
+          JSON.stringify(typeof res.error === 'string' ? res.error : res.error?.message),
+          {
+            variant: 'error'
+          }
+        )
       }
     } catch (error) {
       enqueueSnackbar(ErrorsMessages.UNEXPECTED, {

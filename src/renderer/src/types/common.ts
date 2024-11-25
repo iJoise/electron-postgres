@@ -5,7 +5,7 @@ type SuccessResponseType<T> = {
 
 type ErrorResponseType = {
   success: false
-  error: string
+  error: string | { message: string; stack: string }
 }
 
 export type ResponseType<T> = SuccessResponseType<T> | ErrorResponseType

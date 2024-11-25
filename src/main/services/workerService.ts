@@ -1,21 +1,20 @@
 import * as XLSX from 'xlsx'
 import { client } from '../database'
 
-const recreateDepartmentsTable = async () => {
-  const dropQuery = `DROP TABLE IF EXISTS departments;`
+const updateDepartmentsTable = async () => {
   const createQuery = `
-    CREATE TABLE departments (
+    CREATE TABLE IF NOT EXISTS departments (
       id SERIAL PRIMARY KEY,
-      name TEXT UNIQUE
+      name TEXT UNIQUE,
+      is_active BOOLEAN DEFAULT true
     );
   `
 
   try {
-    await client.query(dropQuery)
     await client.query(createQuery)
-    console.log('Таблица departments пересоздана')
+    console.log('Таблица departments обновлена или уже существует')
   } catch (error) {
-    console.error('Ошибка при создании таблицы departments:', error)
+    console.error('Ошибка при обновлении таблицы departments:', error)
     throw error
   }
 }
@@ -41,19 +40,23 @@ const recreateWorkersTable = async () => {
   }
 }
 
-const getOrCreateDepartment = async (departments: string[]) => {
-  const queryInsert = `
-    INSERT INTO departments (name)
-    VALUES ($1)
-  `
-
+const updateDepartments = async (departments: string[]) => {
   try {
+    const deactivateQuery = `UPDATE departments SET is_active = false;`
+    await client.query(deactivateQuery)
+
+    const queryInsertOrUpdate = `
+      INSERT INTO departments (name, is_active)
+      VALUES ($1, true)
+      ON CONFLICT (name) DO UPDATE SET is_active = true;
+    `
+
     for (const department of departments) {
-      await client.query(queryInsert, [department])
+      await client.query(queryInsertOrUpdate, [department])
     }
-    console.log('Данные успешно вставлены в таблицу workers')
+    console.log('Департаменты успешно обновлены')
   } catch (error) {
-    console.error('Ошибка при работе с таблицей departments:', error)
+    console.error('Ошибка при обновлении департаментов:', error)
     throw error
   }
 }
@@ -71,19 +74,6 @@ export const insertWorkers = async (workers) => {
     console.log('Данные успешно вставлены в таблицу workers')
   } catch (error) {
     console.error('Ошибка при вставке данных сотрудников:', error)
-    throw error
-  }
-}
-
-const recreateDepartmentsAndWorkersTables = async () => {
-  try {
-    await recreateDepartmentsTable()
-
-    await recreateWorkersTable()
-
-    console.log('Таблицы departments и workers успешно пересозданы')
-  } catch (error) {
-    console.error('Ошибка при пересоздании таблиц:', error)
     throw error
   }
 }
@@ -117,10 +107,12 @@ export const processWorkersFile = async (filePath: string) => {
     })
 
     if (workers.length) {
-      await recreateDepartmentsAndWorkersTables()
+      await updateDepartmentsTable()
+
+      await recreateWorkersTable()
 
       await insertWorkers(workers)
-      await getOrCreateDepartment(departments)
+      await updateDepartments(departments)
     }
   } catch (error) {
     console.error('Ошибка при обработке файла:', error)
@@ -143,10 +135,7 @@ export const getAllWorkers = async () => {
 }
 
 export const getAllDepartments = async () => {
-  const query = `
-    SELECT id, name 
-    FROM departments;
-  `
+  const query = `SELECT * FROM departments;`
 
   try {
     const res = await client.query(query)

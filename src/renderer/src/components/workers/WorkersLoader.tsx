@@ -25,9 +25,12 @@ export const WorkersLoader = () => {
         variant: 'success'
       })
     } else {
-      enqueueSnackbar(JSON.stringify(res.error), {
-        variant: 'error'
-      })
+      enqueueSnackbar(
+        JSON.stringify(typeof res.error === 'string' ? res.error : res.error?.message),
+        {
+          variant: 'error'
+        }
+      )
 
       setFilename('')
     }
